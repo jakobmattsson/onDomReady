@@ -1,4 +1,4 @@
 A small implementation of a onDomReady-function, for situations when frameworks are no-no.
 
-Loosly based on jQuery's implementation of $.ready
+Loosely based on jQuery's implementation of $.ready
 
