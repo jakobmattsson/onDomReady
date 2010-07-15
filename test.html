@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+  <title>onDomReady test page</title>
+  <script type="text/javascript" charset="utf-8" src="ondomready.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    onDomReady(function(){
+      console.log('dom ready 1, body: ' + document.body);
+    });
+    onDomReady(function(){
+      console.log('dom ready 2, body: ' + document.body);
+    });
+    console.log('script finished, body: ' + document.body);
+  </script>
+</head>
+<body onload="console.log('window load')">
+  <div>Huge image:</div>
+  <img src="http://www.astray.com/static/earth-huge.png?random=453456" />
+</body>
+</html>
