@@ -6,39 +6,29 @@
 */
 
 (function() {
-  var isReady = false;
+
+  var onDomReadyIdentifier = 'onDomReady';
   var isBound = false;
   var readyList = [];
 
+  if (window[onDomReadyIdentifier] && typeof window[onDomReadyIdentifier] == 'function') {
+    return;
+  }
+
   var whenReady = function() {
-    if (isReady) {
-      return;
-    }
-    
     // Make sure body exists, at least, in case IE gets a little overzealous.
     // This is taked directly from jQuery's implementation.
     if (!document.body) {
       return setTimeout(whenReady, 13);
     }
-    
-    isReady = true;
-    
+
     for (var i=0; i<readyList.length; i++) {
       readyList[i]();
     }
+    readyList = [];
   };
 
   var bindReady = function() {
-    if (isBound) {
-      return;
-    }
-    isBound = true;
-    
-    // Catch cases where onDomReady is called after the browser event has already occurred.
-    if (document.readyState === "complete") {
-      return whenReady();
-    }
-
     // Mozilla, Opera and webkit nightlies currently support this event
     if (document.addEventListener) {
       var DOMContentLoaded = function() {
@@ -72,7 +62,10 @@
       // The DOM ready check for Internet Explorer
       if (document.documentElement.doScroll && toplevel) {
         var doScrollCheck = function() {
-          if (isReady) {
+
+          // stop searching if we have no functions to call 
+          // (or, in other words, if they have already been called)
+          if (readyList.length == 0) {
             return;
           }
 
@@ -93,8 +86,16 @@
     } 
   };
 
-  window.onDomReady = function(callback) {
-    bindReady();
+  window[onDomReadyIdentifier] = function(callback) {
+    // Push the given callback onto the list of functions to execute when ready.
+    // If the dom has alredy loaded, call 'whenReady' right away.
+    // Otherwise bind the ready-event if it hasn't been done already
     readyList.push(callback);
-  }
+    if (document.readyState == "complete") {   
+      whenReady();
+    } else if (!isBound) {
+      bindReady();
+      isBound = true;
+    }
+  };
 })();
